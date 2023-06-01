@@ -2,14 +2,30 @@ import "./userList.css";
 import { DataGrid } from '@mui/x-data-grid';
 import { DeleteOutline } from '@mui/icons-material/';
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
 import { deleteUser, getUsers } from "../../redux/apiCalls";
+import axios from "axios";
+
 
 export default function UserList() {
 
   const dispatch = useDispatch();
-  const users = useSelector((state) => state.user.users);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        const res = await axios.get("https://eshop2-backendapi.onrender.com/users");
+        setUsers(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUsers();
+  }, []);
+
+
 
   useEffect(() => {
     getUsers(dispatch)
